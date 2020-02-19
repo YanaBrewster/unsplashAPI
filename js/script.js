@@ -1,6 +1,3 @@
-// console.log('json & ajax'); //testing script.js
-
-
 //to test jquery
 $(document).ready(function(){
 
@@ -17,12 +14,21 @@ $(document).ready(function(){
     endPoint = document.getElementById('endpoints').value;
     size = document.getElementById('sizes').value;
     console.log(endPoint,size);
-    displayData(endPoint,size);
+    var users = 'harleydavidson';
+    displayData(endPoint,size,users);
   });
 
 
-  function displayData(ep, si){
-    console.log(ep, si);
+  function displayData(ep, si, us){
+    console.log(ep, si, us);
+
+    // DIFFERENT ENDPOINTS
+    if (ep === 'users') {
+      var url = `https://api.unsplash.com/users/${us}/?client_id=${myKey}`;
+    } else {
+      var url =  `https://api.unsplash.com/${ep}/?client_id=${myKey}`;
+    }
+
     //ajax method
     $.ajax({
       url: `https://api.unsplash.com/${ep}/?client_id=${myKey}`,
@@ -34,12 +40,8 @@ $(document).ready(function(){
           collections(data,ep, si);
         } else if (ep === 'photos'){
           photos(data, ep, si);
-        } else if (ep === 'users/harleydavidson'){
+        } else if (ep === 'users'){
           users(data, ep, si);
-          // ep ='users/harleydavidson';
-
-          // var users = 'users/harleydavidson'
-          // $( ep ).prepend( $(harley) );
         }
 
         function collections(d, e,s){
@@ -68,7 +70,7 @@ $(document).ready(function(){
             '<p class="text-white">' + data[k].user.username + '</p>' +
             '</div>';
           } // collection loop ends
-        }; // collection ends
+        } // collection ends
 
         function photos(d, e,s){
           var j;
@@ -94,44 +96,52 @@ $(document).ready(function(){
             '<p class="text-white">' + data[j].user.updated_at + '</p>' +
             '</div>';
           } //photo loop ends
-        };//photo ends
+        }//photo ends
 
-        function users(d, e, s){
-          var u;
-          var usersPhoto;
-
-          document.getElementById('result').innerHTML = '';
-          for(u = 0; u < d.length; u++ ){
-            if (s === 'full') {
-            usersPhoto = d[u].urls.full;
-            } else if (s === 'raw') {
-            usersPhoto = d[u].urls.raw;
-            } else if (s === 'regular') {
-            usersPhoto = d[u].urls.regular;
-            }else if (s === 'small') {
-            usersPhoto = d[u].urls.small;
-            } else if (s === 'thumb') {
-            usersPhoto = d[u].urls.thumb;
-            }
+        function users(d, e, s) {
+         console.log(d,e,s)
+         document.getElementById('result').innerHTML = '';
+         var p;
+         var userPhoto;
+         console.log(d.photos[0].urls.full);
 
             document.getElementById('result').innerHTML +=
-            '<div class="col">' +
-            '<img class="img-thumbnail" alt="Image" src="' + usersPhoto + '">' +
-            '<h4 class="text-white">' + data[u].user.username + '</h4>'+
-            '<p class="text-white">' + data[u].user.portfolio_url + '</p>' +
-            '</div>';
-          }// user loop
-        }; //user ends
+           '<div class="row border border-success">';
 
-} //success ends
+           for(p = 0; p < d.photos.length; p++) {
+               if (s === 'full') {
+                 userPhoto = d.photos[p].urls.full;
+               } else if (s === 'raw') {
+                 userPhoto = d.photos[p].urls.raw;
+               } else if (s === 'regular') {
+                 userPhoto = d.photos[p].urls.regular;
+               }else if (s === 'small') {
+                 userPhoto = d.photos[p].urls.small;
+               } else if (s === 'thumb') {
+                 userPhoto = d.photos[p].urls.thumb;
+               }
+               document.getElementById('result').innerHTML +=
 
-  // error:function(){
-  //   console.log('error');
-  //error
+               '<img class="col-4 img-thumbnail" alt="Image" src="' + userPhoto + '">'
 
+            }//for
 
-});//ajax
+          document.getElementById('result').innerHTML +=
+          '<h4 class="text-white">' + d[p].user.username + '</h4>'+
+          '<p class="text-white">' + d[p].user.updated_at + '</p>' +
+          '</div>';
 
-}; // function displayData ends here
+       } //users function
 
-});//document.ready
+      }, //success ends
+
+      error:function(){
+        console.log('error');
+
+      }  // error
+
+      });//ajax
+
+    } // function displayData ends here
+
+  });//document.ready
