@@ -31,7 +31,7 @@ $(document).ready(function(){
 
     //ajax method
     $.ajax({
-      url: `https://api.unsplash.com/${ep}/?client_id=${myKey}`,
+      url: url,
       type:'GET',
       data:'json',
       success: function(data){
@@ -127,9 +127,12 @@ $(document).ready(function(){
             }//for
 
           document.getElementById('result').innerHTML +=
-          '<h4 class="text-white">' + d[p].user.username + '</h4>'+
-          '<p class="text-white">' + d[p].user.updated_at + '</p>' +
-          '</div>';
+          '</div>'+
+          '<div class="mt-3 text-white bg-info px-3 py-3 rounded">' +
+            '<h1 class="my2">' + d.first_name + '</h1> <h2 class="my-3">' +
+            d.location + '<br> Total likes:' +d.total_likes + '</h2> <h3> ' + d.portfolio_url +' </h3>' +
+            '<img class="img-thumbnail" alt="Profile Image" src="' + d.profile_image.small + '">' +
+          '</div>'  + '<br>' ;
 
        } //users function
 
